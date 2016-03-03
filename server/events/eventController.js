@@ -19,82 +19,49 @@ module.exports = {
         console.log("retrieving from database...");
         res.json(doc.eventList);
       } else {
-        console.log("retrieving from eventful api");
-        var eventCount = 0;
-        var totalEvents = [];
-
-        // split categories on the comma to then loop through each
-        // make an api call to each and put into totalEvents to then store in database
-        // store the call in the database as normally would (without split)
-        var categories = req.query.q
-        categories = categories.split(',');
-
-        console.log("Categories", categories);
-        for(var i = 0; i < categories.length; i++) {
-          (function (i) {
-            category = categories[i];
-            console.log("Category", category);
-            req.query.q = category;
-
-            client.searchEvents(req.query,
-              function(err, data){
-                if (err) {
-                  console.error("Error received in searchEvents:", err);
+        client.searchEvents(req.query,
+          function(err, data){
+            if (err) {
+              console.error("Error received in searchEvents:", err);
+            } else {
+              if (data) {
+                // data received from eventful API, return data to map, then store in db
+                  // uses $currentDate to pull date and sets value of lastModified column
+                  // $currentDate: {
+                  //   lastModified: true,
+                  // },
+                var eventList = data.search.events.event;
+                if(!eventList) {
+                  res.end();
                 } else {
-                  if (data) {
-                    // data received from mongoDB, return data to map
-                    // OR data received from Eventful API, return data to map, then store in db
-                    var eventList = data.search.events.event;
-                    if(!eventList) {
-                      res.end();
-                    } else {
-                      for(var i = 0; i < eventList.length; i++){
-                        if(eventList[i].description) {
-                          eventList[i].description = eventList[i].description.slice(0, 500) + '...';
-                        }
-                        var used = ['title', 'venue_name', 'venue_address', 'city_name', 'region_abbr', 'url', 'latitude', 'longitude', 'description'];
-                        for(var prop in eventList[i]) {
-                          if(used.indexOf(prop) === -1){
-                            delete eventList[i][prop];
-                          }
-                        }
-                      }
-                      eventCount++;
-                      // console.log("eventList", eventList);
-                      // if(eventCount > 1){
-                        totalEvents.push(eventList);
-                      // } else {
-                      //   totalEvents = eventList;
-                      // }
-                      // when the last one returns, store the totalEvents List
-                      if(eventCount === categories.length) {
-                        console.log("totalEvents", eventList);
-                        addEventsToDB(eventList);
+                  for(var i = 0; i < eventList.length; i++){
+                    if(eventList[i].description) {
+                      eventList[i].description = eventList[i].description.slice(0, 500) + '...';
+                    }
+                    var used = ['title', 'venue_name', 'venue_address', 'city_name', 'region_abbr', 'url', 'latitude', 'longitude', 'description'];
+                    for(var prop in eventList[i]) {
+                      if(used.indexOf(prop) === -1){
+                        delete eventList[i][prop];
                       }
                     }
                   }
+
+                  Event.create({
+                    dateAndPlace: req.query.date + req.query.where + req.query.q,
+                    eventList: eventList,
+                  }, function (err, list){
+                    if (err){
+                      console.log("ERROR: ", err);
+                    } else {
+                      console.log('List Added');
+                    }
+                  res.json(eventList);
+                  });
                 }
-              });
-          })(i);
-        }
-
-// ~~~~~~~~~addEventsToDB Function
-        var addEventsToDB = function (eventList) {
-          Event.create({
-            dateAndPlace: req.query.date + req.query.where + req.query.q,
-            eventList: eventList,
-          }, function (err, list){
-            if (err){
-              console.log("ERROR: ", err);
-            } else {
-              console.log('List Added to DB');
+              }
             }
-            res.json(eventList);
-          });
-        }
-  // ~~~~~~~~~~End addEventsToDB~~~~~~~~~
-
-      }  // else (it's gathering from API)
-    }); // .then (after looked in mongo)
+        });
+      }
+    });
   }
 };
