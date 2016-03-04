@@ -41,7 +41,6 @@ class Search extends React.Component {
     testChecks(this.refs.performing);
     // captures an OR verse an AND on the search query
     const catStr = cats.join('+%7C%7C+');
-    //urlencode
     this.props.getQuery(this.refs.city.value, this.refs.start.value, this.refs.end.value, catStr);
   }
 
