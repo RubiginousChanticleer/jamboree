@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
+/*eslint-disable */
 class Event extends Component {
   constructor(props) {
     super(props);
   }
-
   render() {
     return (
         <article>
@@ -17,6 +17,7 @@ class Event extends Component {
     );
   }
 }
+/*eslint-disable */
 
 Event.propTypes = { data: React.PropTypes.object.isRequired };
 

@@ -1,4 +1,5 @@
 import React from 'react';
+/*eslint-disable */
 
 const VideoPlayer = (props) => (
   <div className="videoPlayer">
@@ -11,5 +12,6 @@ const VideoPlayer = (props) => (
     </div>
   </div>
 );
+/*eslint-disable */
 
 export default VideoPlayer;

@@ -30,33 +30,6 @@ export class App extends Component {
     });
   }
 
-  changeLatLng(lat, lng) {
-    this.setState({
-      lat,
-      lng,
-    });
-  }
-
-  changeCurrEvent(event) {
-    this.setState({
-      currentEvent: event,
-    });
-    this.searchYouTube(event.title, this.changeVideo.bind(this));
-    this.changeLatLng(event.latitude, event.longitude);
-  }
-
-  changeEvents(events) {
-    this.setState({
-      events,
-    });
-  }
-
-  changeVideo(video) {
-    this.setState({
-      video,
-    });
-  }
-
   getQuery(city, start, end, catStr) { //eslint-disable-line
     const formattedStart = start.split('-').join('');
     let dateRange = formattedStart + '00-'; //eslint-disable-line
@@ -83,7 +56,6 @@ export class App extends Component {
       contentType: 'application/json',
       success: (data) => {
         this.setState({ fail: false });
-        console.log('call to server successful');
         if (data) {
           const eventList = data;
           this.setState({ events: eventList });
@@ -97,6 +69,33 @@ export class App extends Component {
         console.log('problem is ', JSON.parse(data.responseText));
         console.log(JSON.parse(data.responseText));
       },
+    });
+  }
+
+  changeCurrEvent(event) {
+    this.setState({
+      currentEvent: event,
+    });
+    this.searchYouTube(event.title, this.changeVideo.bind(this));
+    this.changeLatLng(event.latitude, event.longitude);
+  }
+
+  changeEvents(events) {
+    this.setState({
+      events,
+    });
+  }
+
+  changeVideo(video) {
+    this.setState({
+      video,
+    });
+  }
+
+  changeLatLng(lat, lng) {
+    this.setState({
+      lat,
+      lng,
     });
   }
 
