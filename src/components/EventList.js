@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import VideoPlayer from './VideoPlayer';
 import Event from './Event.js';
 
+/*eslint-disable */
 class EventList extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +26,7 @@ class EventList extends Component {
     );
   }
 }
+/*eslint-disable */
 
 EventList.propTypes = { data: React.PropTypes.array.isRequired };
 

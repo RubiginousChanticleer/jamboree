@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 
+/*eslint-disable */
 class Event extends Component {
   constructor(props) {
     super(props);
   }
-
   render() {
     return (
         <article>
-          <h4 onClick={ this.props.clickHandler.bind(null, this.props.data) }>{ this.props.data.title }</h4>
+          <h4 onClick={ this.props.clickHandler.bind(null, this.props.data) }>
+            { this.props.data.title }
+          </h4>
           <div>
             <img src="http://maps.google.com/mapfiles/ms/icons/pink-dot.png"></img>
             <h5>{ this.props.data.venue_name }</h5>
@@ -17,6 +19,7 @@ class Event extends Component {
     );
   }
 }
+/*eslint-disable */
 
 Event.propTypes = { data: React.PropTypes.object.isRequired };
 

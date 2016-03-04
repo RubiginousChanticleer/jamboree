@@ -30,13 +30,6 @@ export class App extends Component {
     });
   }
 
-  changeLatLng(lat, lng) {
-    this.setState({
-      lat,
-      lng,
-    });
-  }
-
   changeCurrEvent(event) {
     this.setState({
       currentEvent: event,
@@ -96,6 +89,13 @@ export class App extends Component {
         console.log('problem is ', JSON.parse(data.responseText));
         console.log(JSON.parse(data.responseText));
       },
+    });
+  }
+
+  changeLatLng(lat, lng) {
+    this.setState({
+      lat,
+      lng,
     });
   }
 
